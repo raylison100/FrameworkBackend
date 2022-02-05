@@ -1,8 +1,8 @@
 package br.com.framework.post.security.config;
 
 import br.com.framework.post.repositories.IUserRepository;
-import br.com.framework.post.security.services.AuthenticationService;
 import br.com.framework.post.security.filters.AuthenticationTokenFilter;
+import br.com.framework.post.security.services.AuthenticationService;
 import br.com.framework.post.security.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfigurations extends WebSecurityConfigurerAdapter  {
+public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -52,6 +52,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter  {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AuthenticationTokenFilter(this.tokenService, this.userRepository), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(
+                        new AuthenticationTokenFilter(this.tokenService, this.userRepository),
+                        UsernamePasswordAuthenticationFilter.class
+                );
+        http.cors();
     }
 }

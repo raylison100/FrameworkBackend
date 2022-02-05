@@ -2,11 +2,11 @@ package br.com.framework.post.transforms.dto;
 
 public class FormErrorDto {
     private String field;
-    private String error;
+    private String message;
 
     public FormErrorDto(String campo, String error) {
         this.field = campo;
-        this.error = error;
+        this.message = error;
     }
 
 
@@ -14,7 +14,7 @@ public class FormErrorDto {
         return field;
     }
 
-    public String getError() {
-        return error;
+    public String getMessage() {
+        return message;
     }
 }
