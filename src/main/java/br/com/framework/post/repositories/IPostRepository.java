@@ -8,4 +8,6 @@ import java.util.List;
 public interface IPostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthorId(Long idAuthor);
+
+    List<Post> findByOrderByIdDesc();
 }

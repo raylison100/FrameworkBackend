@@ -5,6 +5,8 @@ import br.com.framework.post.models.Post;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AlbumDto {
 
@@ -36,7 +38,11 @@ public class AlbumDto {
         return nomeAuthor;
     }
 
-    public static Page<AlbumDto> converter(Page<Album> albums){
+    public static Page<AlbumDto> converterPagination(Page<Album> albums){
         return albums.map(AlbumDto::new);
+    }
+
+    public static List<AlbumDto> converter(List<Album> albums){
+        return albums.stream().map(AlbumDto::new).collect(Collectors.toList());
     }
 }

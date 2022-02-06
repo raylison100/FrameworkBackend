@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,9 +43,16 @@ public class AlbumController {
 
     @GetMapping
     @Cacheable(value = "album-list")
+    public List<AlbumDto> list(){
+        List<Album> albums = this.albumRepository.findByOrderByIdDesc();
+        return AlbumDto.converter(albums);
+    }
+
+    @GetMapping("/pagination")
+    @Cacheable(value = "album-list")
     public Page<AlbumDto> list(Pageable pageable){
         Page<Album> albums = this.albumRepository.findAll(pageable);
-        return AlbumDto.converter(albums);
+        return AlbumDto.converterPagination(albums);
     }
 
     @GetMapping("/{id}")

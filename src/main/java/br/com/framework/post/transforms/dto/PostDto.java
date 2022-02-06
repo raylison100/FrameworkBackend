@@ -4,6 +4,8 @@ import br.com.framework.post.models.Post;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostDto {
 
@@ -61,7 +63,11 @@ public class PostDto {
         this.createdAt = createdAt;
     }
 
-    public static Page<PostDto> converter(Page<Post> posts){
+    public static Page<PostDto> converterPagination(Page<Post> posts){
         return posts.map(PostDto::new);
+    }
+
+    public static List<PostDto> converter(List<Post> posts){
+        return posts.stream().map(PostDto::new).collect(Collectors.toList());
     }
 }

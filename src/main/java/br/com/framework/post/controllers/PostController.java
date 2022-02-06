@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,9 +37,16 @@ public class PostController {
 
     @GetMapping
     @Cacheable(value = "post-list")
+    public List<PostDto> list(){
+        List<Post> posts = this.postRepository.findByOrderByIdDesc();
+        return PostDto.converter(posts);
+    }
+
+    @GetMapping("/pagination")
+    @Cacheable(value = "post-list")
     public Page<PostDto> list(Pageable pageable){
         Page<Post> posts = this.postRepository.findAll(pageable);
-        return PostDto.converter(posts);
+        return PostDto.converterPagination(posts);
     }
 
     @GetMapping("/{id}")
