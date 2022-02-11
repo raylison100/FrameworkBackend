@@ -14,6 +14,7 @@ import br.com.framework.post.transforms.form.CommentCreateForm;
 import br.com.framework.post.transforms.form.PostCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -70,5 +72,11 @@ public class CommentController {
 
         this.commentRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/post/{id}")
+    public List<CommentDto> listByPostId(@PathVariable Long id){
+        List<Comment> comments = this.commentRepository.findByPostId(id);
+        return CommentDto.converter(comments);
     }
 }

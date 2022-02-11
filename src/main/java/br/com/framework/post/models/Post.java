@@ -1,8 +1,11 @@
 package br.com.framework.post.models;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,24 +17,26 @@ public class Post {
 
 	private String text;
 
-	private String image;
-
 	private String link;
+
+	@Lob
+	private byte[] image;
+
+	private String type;
 
 	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@ManyToOne
 	private User author;
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private List<Comment> comments = new ArrayList<>();
 
 	public Post() {
 	}
 
-	public Post(String text, String image, String link, User author) {
+	public Post(String text, String link, User author) {
 		this.text = text;
-		this.image = image;
 		this.link = link;
 		this.author = author;
 	}
@@ -52,11 +57,11 @@ public class Post {
 		this.text = text;
 	}
 
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
@@ -92,17 +97,26 @@ public class Post {
 		this.comments = comments;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public boolean equals(Object o) {
-
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Post post = (Post) o;
-		return Objects.equals(id, post.id) && Objects.equals(text, post.text) && Objects.equals(image, post.image) && Objects.equals(link, post.link) && Objects.equals(createdAt, post.createdAt) && Objects.equals(author, post.author) && Objects.equals(comments, post.comments);
+		return Objects.equals(id, post.id) && Objects.equals(text, post.text) && Objects.equals(link, post.link) && Arrays.equals(image, post.image) && Objects.equals(type, post.type) && Objects.equals(createdAt, post.createdAt) && Objects.equals(author, post.author) && Objects.equals(comments, post.comments);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, text, image, link, createdAt, author, comments);
+		int result = Objects.hash(id, text, link, type, createdAt, author, comments);
+		result = 31 * result + Arrays.hashCode(image);
+		return result;
 	}
 }

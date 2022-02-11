@@ -1,9 +1,16 @@
 package br.com.framework.post.transforms.dto;
 
 import br.com.framework.post.models.Comment;
+import br.com.framework.post.models.Post;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class CommentDto {
 
     private Long id;
@@ -19,19 +26,7 @@ public class CommentDto {
         this.nomeAuthor = comment.getAuthor().getName();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getNomeAuthor() {
-        return nomeAuthor;
+    public static List<CommentDto> converter(List<Comment> comments){
+        return comments.stream().map(CommentDto::new).collect(Collectors.toList());
     }
 }

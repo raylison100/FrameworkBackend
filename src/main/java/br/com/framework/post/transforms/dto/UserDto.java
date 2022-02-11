@@ -1,7 +1,9 @@
 package br.com.framework.post.transforms.dto;
 
 import br.com.framework.post.models.User;
+import lombok.Getter;
 
+@Getter
 public class UserDto {
 
     private Long id;
@@ -14,17 +16,5 @@ public class UserDto {
         this.id = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
     }
 }

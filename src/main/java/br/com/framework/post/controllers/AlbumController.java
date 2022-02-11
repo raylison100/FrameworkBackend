@@ -50,7 +50,7 @@ public class AlbumController {
 
     @GetMapping("/pagination")
     @Cacheable(value = "album-list")
-    public Page<AlbumDto> list(Pageable pageable){
+    public Page<AlbumDto> listPagination(Pageable pageable){
         Page<Album> albums = this.albumRepository.findAll(pageable);
         return AlbumDto.converterPagination(albums);
     }

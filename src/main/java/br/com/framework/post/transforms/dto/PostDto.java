@@ -1,73 +1,61 @@
 package br.com.framework.post.transforms.dto;
 
 import br.com.framework.post.models.Post;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class PostDto {
 
     private Long id;
     private String text;
     private String image;
     private String link;
+    private String type;
     private LocalDateTime createdAt;
 
-    public PostDto(Post post) {
-        this.id = post.getId();
-        this.text = post.getText();
-        this.image = post.getImage();
-        this.link = post.getLink();
-        this.createdAt = post.getCreatedAt();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+    public PostDto(Long id, String text, String link, String image, String type, LocalDateTime createdAt) {
         this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
         this.text = text;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
         this.link = link;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
+        this.image = image;
+        this.type = type;
         this.createdAt = createdAt;
     }
 
     public static Page<PostDto> converterPagination(Page<Post> posts){
-        return posts.map(PostDto::new);
+        return posts.map(PostDto::genericConverter);
     }
 
     public static List<PostDto> converter(List<Post> posts){
-        return posts.stream().map(PostDto::new).collect(Collectors.toList());
+        return posts.stream().map(PostDto::genericConverter).collect(Collectors.toList());
+    }
+
+    public static PostDto genericConverter(Post post){
+        String fileDownloadUri = "";
+
+        if (post.getImage() != null){
+            fileDownloadUri = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/files/")
+                    .path(String.valueOf(post.getId()))
+                    .toUriString();
+        }
+
+        return new PostDto(
+                post.getId(),
+                post.getText(),
+                post.getLink(),
+                fileDownloadUri,
+                post.getType(),
+                post.getCreatedAt()
+        );
     }
 }
